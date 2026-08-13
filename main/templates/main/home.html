@@ -1,0 +1,404 @@
+{% extends 'main/base.html' %}
+
+{% block title %}RecipeHub - Mazali retseptlar{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block extra_style %}
+    /* HERO SECTION */
+    .hero {
+        background: linear-gradient(145deg, var(--surface-alt) 0%, var(--border) 100%);
+        border-radius: 3rem;
+        margin: 2.5rem 0 3rem 0;
+        padding: 4.5rem 3rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 20px 40px var(--shadow-soft);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::after {
+        content: "🍲";
+        position: absolute;
+        right: 0;
+        bottom: -30px;
+        font-size: 18rem;
+        opacity: 0.08;
+        transform: rotate(-10deg);
+        pointer-events: none;
+    }
+
+    .hero-content { flex: 1 1 400px; z-index: 2; }
+
+    .hero-content h1 {
+        font-size: 3.6rem;
+        font-weight: 800;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: 1.2rem;
+    }
+
+    .hero-content h1 span { color: var(--accent-dark); }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        max-width: 500px;
+        margin-bottom: 2rem;
+    }
+
+    .btn-hero {
+        background: var(--text);
+        color: var(--bg);
+        border: none;
+        padding: 0.9rem 2.8rem;
+        border-radius: 60px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 20px var(--shadow-strong);
+        transition: 0.2s;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    .btn-hero:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateY(-3px);
+        box-shadow: 0 16px 30px var(--accent-glow);
+    }
+
+    .hero-visual { flex: 0 0 220px; z-index: 2; text-align: center; }
+
+    .hero-visual span {
+        font-size: 8rem;
+        line-height: 1;
+        filter: drop-shadow(0 20px 20px var(--shadow-strong));
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 2.8rem 0 1.8rem 0;
+        color: var(--text);
+        letter-spacing: -0.3px;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        scroll-margin-top: 6rem;
+    }
+
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), var(--border));
+        border-radius: 10px;
+    }
+
+    .section-title .clear-search {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--accent);
+        background: var(--accent-soft-bg);
+        padding: 0.3rem 1rem;
+        border-radius: 40px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s;
+    }
+
+    .section-title .clear-search:hover { background: var(--accent); color: #fff; }
+
+    /* CATEGORY GRID */
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.8rem;
+        margin: 2rem 0 1rem 0;
+    }
+
+    .category-item {
+        background: var(--surface);
+        padding: 1.8rem 0.8rem;
+        border-radius: 2.5rem;
+        text-align: center;
+        box-shadow: 0 6px 20px var(--shadow-soft);
+        border: 1px solid var(--border-soft);
+        transition: all 0.25s;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        display: block;
+    }
+
+    .category-item:hover {
+        transform: translateY(-6px);
+        border-color: var(--accent);
+        box-shadow: 0 16px 30px var(--accent-glow);
+    }
+
+    .category-emoji { display: block; font-size: 2.8rem; margin-bottom: 0.5rem; }
+
+    /* RECIPES GRID */
+    .recipes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2.2rem;
+        margin: 2rem 0 3rem 0;
+    }
+
+    .recipe-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        transition: transform 0.3s cubic-bezier(0.15, 0.75, 0.45, 1);
+    }
+
+    .recipe-card-link:hover { transform: translateY(-10px); }
+
+    .recipe-card-link:hover .recipe-card {
+        box-shadow: 0 30px 50px var(--accent-glow);
+        border-color: var(--accent);
+    }
+
+    .recipe-card-link:hover .recipe-image img { transform: scale(1.03); }
+
+    .recipe-card {
+        background: var(--surface);
+        border-radius: 2rem;
+        overflow: hidden;
+        box-shadow: 0 8px 28px var(--shadow-soft);
+        transition: all 0.3s cubic-bezier(0.15, 0.75, 0.45, 1);
+        border: 1px solid var(--border-soft);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .recipe-image {
+        width: 100%;
+        height: 200px;
+        background: var(--placeholder-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: var(--placeholder-icon);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .recipe-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.4s;
+    }
+
+    .recipe-image .placeholder {
+        background: var(--placeholder-bg);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        color: var(--placeholder-icon);
+    }
+
+    .recipe-body {
+        padding: 1.6rem 1.6rem 1.8rem 1.6rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recipe-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+        color: var(--text);
+    }
+
+    .recipe-category {
+        display: inline-block;
+        background: var(--accent-soft-bg);
+        padding: 0.2rem 1rem;
+        border-radius: 40px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--accent-soft-text);
+        letter-spacing: 0.3px;
+        margin: 0.25rem 0 0.6rem 0;
+        align-self: flex-start;
+    }
+
+    .recipe-description {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin: 0.4rem 0 0.8rem 0;
+        flex: 1;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .recipe-meta {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid var(--border-soft);
+        padding-top: 0.9rem;
+        margin-top: 0.4rem;
+        font-size: 0.9rem;
+        color: var(--text-soft);
+        font-weight: 500;
+    }
+
+    .recipe-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+    .empty-message {
+        grid-column: 1 / -1;
+        background: var(--surface-alt);
+        border-radius: 3rem;
+        padding: 4rem 2rem;
+        text-align: center;
+        font-size: 1.6rem;
+        color: var(--text-soft);
+        border: 2px dashed var(--dashed-border);
+        font-weight: 500;
+    }
+
+    .empty-message span { font-size: 3rem; display: block; margin-bottom: 0.6rem; }
+    .empty-message .hint { font-size: 1rem; margin-top: 0.6rem; opacity: 0.8; font-weight: 400; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .hero { padding: 3rem 1.8rem; text-align: center; }
+        .hero-content h1 { font-size: 2.8rem; }
+        .hero-content p { margin-left: auto; margin-right: auto; }
+        .hero-visual { flex: 1 1 100%; margin-top: 1.5rem; }
+        .hero-visual span { font-size: 6rem; }
+        .hero::after { display: none; }
+    }
+
+    @media (max-width: 720px) {
+        .section-title { font-size: 1.8rem; }
+        .recipes-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 500px) {
+        .recipes-grid { grid-template-columns: 1fr; }
+        .hero-content h1 { font-size: 2.2rem; }
+        .category-grid { grid-template-columns: 1fr 1fr; }
+    }
+{% endblock %}
+
+{% block content %}
+    <main class="container">
+
+        {% if not is_search %}
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Mazali <span>retseptlarni</span> kashf eting</h1>
+                <p>Uyda pishirish sanʼatini o‘rganing. Eng yaxshi taomlar, eng oddiy usullar.</p>
+                <a href="{% url 'random_recipe' %}" class="btn-hero">
+                    🎲 Tasodifiy taom
+                </a>
+            </div>
+            <div class="hero-visual">
+                <span>🥘</span>
+            </div>
+        </section>
+
+        <!-- CATEGORIES -->
+        <div id="categories">
+            <h2 class="section-title">Kategoriyalar</h2>
+            <div class="category-grid">
+                <a href="{% url 'category' 'Milliy taomlar' %}#recipes" class="category-item">
+                    <span class="category-emoji">🍲</span>
+                    Milliy taomlar
+                </a>
+                <a href="{% url 'category' 'Fast Food' %}#recipes" class="category-item">
+                    <span class="category-emoji">🍕</span>
+                    Fast Food
+                </a>
+                <a href="{% url 'category' 'Shirinliklar' %}#recipes" class="category-item">
+                    <span class="category-emoji">🍰</span>
+                    Shirinliklar
+                </a>
+                <a href="{% url 'category' 'Salatlar' %}#recipes" class="category-item">
+                    <span class="category-emoji">🥗</span>
+                    Salatlar
+                </a>
+                <a href="{% url 'category' 'Ichimliklar' %}#recipes" class="category-item">
+                    <span class="category-emoji">🥤</span>
+                    Ichimliklar
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- RECIPES SECTION -->
+        <div id="recipes">
+            <h2 class="section-title">
+                {% if is_search %}
+                    "{{ search_query }}" bo‘yicha natijalar
+                    <a href="{% url 'home' %}" class="clear-search">✕ Tozalash</a>
+                {% elif category_name %}
+                    {{ category_name }}
+                {% else %}
+                    Eng so‘nggi retseptlar
+                {% endif %}
+            </h2>
+            <div class="recipes-grid">
+                {% if recipes %}
+                    {% for recipe in recipes %}
+                        <a href="{% url 'recipe_detail' recipe.id %}" class="recipe-card-link">
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    {% if recipe.image %}
+                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
+                                    {% else %}
+                                        <div class="placeholder">🍽️</div>
+                                    {% endif %}
+                                </div>
+                                <div class="recipe-body">
+                                    <h3 class="recipe-name">{{ recipe.name }}</h3>
+                                    <span class="recipe-category">{{ recipe.category }}</span>
+                                    <p class="recipe-description">{{ recipe.description|truncatewords:18 }}</p>
+                                    <div class="recipe-meta">
+                                        <span>👤 {{ recipe.servings }} ta</span>
+                                        <span>📅 {{ recipe.created_at|date:"d.m.Y" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% elif is_search %}
+                    <div class="empty-message">
+                        <span>🔍</span>
+                        {% if search_query %}
+                            "{{ search_query }}" bo‘yicha hech narsa topilmadi
+                            <div class="hint">Boshqa kalit so‘z bilan qidirib ko‘ring</div>
+                        {% else %}
+                            Qidirish uchun kalit so‘z kiriting
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-message">
+                        <span>🧑‍🍳</span>
+                        Hozircha retseptlar mavjud emas
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

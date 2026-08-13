@@ -1,0 +1,297 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ recipe.name }} | RecipeHub{% endblock %}
+
+{% block extra_style %}
+    .container-narrow { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+    /* BACK BUTTON */
+    .back-row { margin: 2rem 0 1.2rem 0; }
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 0.5rem 1.8rem;
+        border-radius: 60px;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.2s;
+        box-shadow: 0 2px 8px var(--shadow-soft);
+    }
+    .btn-back:hover {
+        border-color: var(--accent);
+        background: var(--surface-alt);
+        transform: translateX(-4px);
+    }
+
+    /* RECIPE HEADER */
+    .recipe-header {
+        background: var(--surface);
+        border-radius: 2.5rem;
+        overflow: hidden;
+        box-shadow: 0 12px 40px var(--shadow-soft);
+        margin-bottom: 2.5rem;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .recipe-image-wrap {
+        flex: 1 1 45%;
+        min-height: 340px;
+        background: var(--placeholder-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 7rem;
+        color: var(--placeholder-icon);
+        overflow: hidden;
+        position: relative;
+    }
+    .recipe-image-wrap img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
+    .recipe-image-wrap .placeholder {
+        background: var(--placeholder-bg);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 6rem;
+        color: var(--placeholder-icon);
+    }
+
+    .recipe-info {
+        flex: 1 1 50%;
+        padding: 2.5rem 2.8rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .recipe-info .category-badge {
+        display: inline-block;
+        background: var(--accent-soft-bg);
+        padding: 0.2rem 1.4rem;
+        border-radius: 40px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent-soft-text);
+        letter-spacing: 0.3px;
+        align-self: flex-start;
+        margin-bottom: 0.6rem;
+    }
+    .recipe-info h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: 0.4rem;
+    }
+    .recipe-info .servings {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-soft);
+        font-weight: 500;
+        font-size: 1.05rem;
+        margin: 0.2rem 0 1rem 0;
+    }
+    .recipe-info .description { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; }
+
+    /* INGREDIENTS */
+    .ingredients-section {
+        background: var(--surface);
+        border-radius: 2rem;
+        padding: 2.2rem 2.8rem;
+        box-shadow: 0 6px 24px var(--shadow-soft);
+        border: 1px solid var(--border-soft);
+        margin: 2.5rem 0 2.5rem 0;
+    }
+    .ingredients-section h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 1.2rem;
+        color: var(--text);
+    }
+    .ingredients-list {
+        font-size: 1.05rem;
+        color: var(--text-muted);
+        white-space: pre-line;
+        line-height: 2;
+        padding-left: 0.5rem;
+    }
+
+    /* STEPS TIMELINE */
+    .steps-section { margin: 2.8rem 0 2.5rem 0; }
+    .steps-section h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 2rem;
+        color: var(--text);
+    }
+
+    .steps-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 1.6rem;
+        position: relative;
+        padding-left: 0.5rem;
+    }
+    .steps-timeline::before {
+        content: '';
+        position: absolute;
+        left: 18px;
+        top: 24px;
+        bottom: 24px;
+        width: 3px;
+        background: var(--scrollbar);
+        border-radius: 10px;
+    }
+
+    .step-card {
+        background: var(--surface);
+        border-radius: 1.8rem;
+        padding: 1.8rem 2rem 1.8rem 4.2rem;
+        box-shadow: 0 4px 18px var(--shadow-soft);
+        border: 1px solid var(--border);
+        position: relative;
+        transition: 0.25s;
+    }
+    .step-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 12px 28px var(--accent-glow);
+        transform: translateY(-2px);
+    }
+
+    .step-number {
+        position: absolute;
+        left: -6px;
+        top: 1.6rem;
+        width: 44px;
+        height: 44px;
+        background: var(--accent);
+        color: white;
+        border-radius: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        box-shadow: 0 6px 16px var(--accent-glow);
+    }
+
+    .step-title { font-size: 1.35rem; font-weight: 700; color: var(--text); margin-bottom: 0.15rem; }
+    .step-time {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: var(--surface-alt);
+        padding: 0.15rem 1.2rem 0.15rem 0.9rem;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--accent-soft-text);
+        margin: 0.3rem 0 0.5rem 0;
+    }
+    .step-time span { font-size: 1.1rem; }
+    .step-description { color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-top: 0.2rem; }
+
+    .empty-steps {
+        background: var(--surface-alt);
+        border-radius: 2rem;
+        padding: 2.5rem;
+        text-align: center;
+        color: var(--text-soft);
+        border: 2px dashed var(--dashed-border);
+    }
+    .empty-steps span { display: block; font-size: 2.8rem; margin-bottom: 0.5rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .recipe-info { padding: 2rem 1.8rem; }
+        .recipe-info h1 { font-size: 2.2rem; }
+        .recipe-image-wrap { min-height: 240px; flex: 1 1 100%; }
+    }
+
+    @media (max-width: 720px) {
+        .step-card { padding: 1.5rem 1.2rem 1.5rem 3.4rem; }
+        .step-number { width: 36px; height: 36px; font-size: 1rem; left: -4px; top: 1.4rem; }
+        .ingredients-section { padding: 1.8rem 1.2rem; }
+        .container-narrow { padding: 0 1rem; }
+    }
+
+    @media (max-width: 500px) {
+        .recipe-info h1 { font-size: 1.8rem; }
+        .steps-timeline::before { left: 12px; }
+        .step-card { padding-left: 2.6rem; }
+        .step-number { width: 30px; height: 30px; font-size: 0.9rem; left: -3px; top: 1.2rem; }
+    }
+{% endblock %}
+
+{% block content %}
+    <main class="container-narrow">
+
+        <!-- BACK BUTTON -->
+        <div class="back-row">
+            <a href="{% url 'home' %}" class="btn-back">
+                ← Bosh sahifaga qaytish
+            </a>
+        </div>
+
+        <!-- RECIPE HEADER -->
+        <div class="recipe-header">
+            <div class="recipe-image-wrap">
+                {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
+                {% else %}
+                    <div class="placeholder">🍽️</div>
+                {% endif %}
+            </div>
+            <div class="recipe-info">
+                <span class="category-badge">{{ recipe.category }}</span>
+                <h1>{{ recipe.name }}</h1>
+                <div class="servings">
+                    <span>👤</span> {{ recipe.servings }} kishiga
+                </div>
+                <p class="description">{{ recipe.description }}</p>
+            </div>
+        </div>
+
+        <!-- INGREDIENTS -->
+        <section class="ingredients-section">
+            <h2>🥕 Masalliqlar</h2>
+            <div class="ingredients-list">{{ recipe.ingredients|linebreaksbr }}</div>
+        </section>
+
+        <!-- COOKING STEPS -->
+        <section class="steps-section">
+            <h2>👨‍🍳 Tayyorlash bosqichlari</h2>
+
+            <div class="steps-timeline">
+                {% for step in recipe.steps.all %}
+                    <div class="step-card">
+                        <div class="step-number">{{ step.step_number }}</div>
+                        <div class="step-title">{{ step.title }}</div>
+                        <div class="step-time">
+                            <span>⏱️</span> {{ step.time_minutes }} daqiqa
+                        </div>
+                        <div class="step-description">{{ step.description }}</div>
+                    </div>
+                {% empty %}
+                    <div class="empty-steps">
+                        <span>📋</span>
+                        Bu retsept uchun hali bosqichlar qo‘shilmagan.
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+{% endblock %}
