@@ -1,0 +1,206 @@
+{% extends 'main/base.html' %}
+
+{% block title %}TaomDiyor | Kirish{% endblock %}
+
+{% block extra_style %}
+    .auth-shell {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem 1rem;
+    }
+
+    .login-wrapper { width: 100%; max-width: 440px; margin: 0 auto; }
+
+    .login-card {
+        background: var(--surface);
+        border-radius: 40px;
+        padding: 2.8rem 2.2rem 2.5rem;
+        box-shadow: 0 20px 60px var(--shadow-strong), 0 8px 24px var(--shadow-soft);
+        transition: box-shadow 0.25s ease;
+    }
+
+    .form-logo {
+        text-align: center;
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.2rem;
+        letter-spacing: -0.5px;
+    }
+    .form-logo .highlight { color: var(--accent); }
+    .logo-emoji { font-size: 2.8rem; display: inline-block; margin-right: 4px; }
+
+    .form-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-top: 0.6rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .form-subtitle {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        font-weight: 400;
+    }
+
+    .messages { margin-bottom: 1.5rem; }
+
+    .message {
+        background: var(--surface-alt);
+        border-radius: 16px;
+        padding: 0.8rem 1.2rem;
+        color: var(--text);
+        border-left: 4px solid var(--accent);
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+    }
+    .message.error { border-left-color: var(--error-border); background: var(--error-bg); }
+    .message.success { border-left-color: var(--success-border); background: var(--success-bg); }
+    .message.info { border-left-color: var(--info-border); background: var(--info-bg); }
+
+    .form-group { margin-bottom: 1.4rem; }
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text);
+        margin-bottom: 0.4rem;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 0.9rem 1.2rem;
+        border: 2px solid var(--border-input);
+        border-radius: 30px;
+        font-size: 1rem;
+        background: var(--bg);
+        color: var(--text);
+        transition: all 0.2s ease;
+        outline: none;
+        font-family: inherit;
+    }
+    .form-group input:focus {
+        border-color: var(--accent);
+        background: var(--surface);
+        box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+    .form-group input::placeholder { color: var(--input-placeholder); font-weight: 300; }
+
+    .btn-submit {
+        width: 100%;
+        padding: 0.9rem;
+        background: var(--accent);
+        color: #ffffff;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 0.6rem;
+        font-family: inherit;
+        letter-spacing: 0.3px;
+    }
+    .btn-submit:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px var(--accent-glow);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    .swap-link { text-align: center; margin-top: 1.6rem; color: var(--text-muted); font-size: 0.95rem; }
+    .swap-link a { color: var(--accent); text-decoration: none; font-weight: 600; transition: color 0.2s ease; }
+    .swap-link a:hover { color: var(--accent-dark); text-decoration: underline; }
+
+    .back-home { text-align: center; margin-top: 1.2rem; }
+    .back-home a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .back-home a:hover { color: var(--accent); }
+
+    .divider { border: none; border-top: 2px solid var(--border-input); margin: 1.6rem 0 1.2rem; }
+
+    @media (max-width: 520px) {
+        .login-card { padding: 2rem 1.5rem 1.8rem; border-radius: 32px; }
+        .form-logo, .logo-emoji { font-size: 2.2rem; }
+        .form-title { font-size: 1.6rem; }
+        .form-group input { padding: 0.8rem 1rem; font-size: 16px; }
+        .btn-submit { font-size: 1rem; padding: 0.8rem; }
+    }
+
+    @media (max-width: 400px) {
+        .login-card { padding: 1.5rem 1rem 1.5rem; border-radius: 28px; }
+        .form-logo, .logo-emoji { font-size: 1.8rem; }
+        .form-title { font-size: 1.4rem; }
+        .form-subtitle { font-size: 0.9rem; }
+        .form-group input { padding: 0.7rem 0.9rem; font-size: 16px; }
+        .btn-submit { font-size: 0.95rem; padding: 0.7rem; }
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="auth-shell">
+        <div class="login-wrapper">
+            <div class="login-card">
+
+                <div class="form-logo">
+                    <span class="logo-emoji">🍳</span>
+                    <span>Recipe<span class="highlight">Hub</span></span>
+                </div>
+
+                <h1 class="form-title">Xush kelibsiz!</h1>
+                <p class="form-subtitle">Akkauntingizga kiring</p>
+
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="username">👤 Username</label>
+                        <input type="text" id="username" name="username" placeholder="Usernameni kiriting" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">🔒 Parol</label>
+                        <input type="password" id="password" name="password" placeholder="Parolingizni kiriting" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">🚀 Kirish</button>
+                </form>
+
+                <hr class="divider">
+
+                <div class="swap-link">
+                    Akkauntingiz yo'qmi? <a href="{% url 'register' %}">Ro'yxatdan o'ting</a>
+                </div>
+
+                <div class="back-home">
+                    <a href="{% url 'home' %}">
+                        <span>←</span> Bosh sahifaga qaytish
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
